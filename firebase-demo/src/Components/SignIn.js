@@ -1,13 +1,19 @@
 import React, {useState} from "react";
 import { Link } from "@reach/router";
+import { auth } from "../firebase.js";
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    const signInWithEmailAndPasswordHandler = 
-            (event,email, password) => {
-                event.preventDefault();
+
+    const signInWithEmailAndPasswordHandler = (event, email, password) => {
+      event.preventDefault();
+      auth.signInWithEmailAndPassword(email, password).catch(error => {
+        setError("Error signing in with password and email!");
+        console.error("Error signing in with password and email", error);
+      });
+      alert('logged in successfully')
     };
 
       const onChangeHandler = (event) => {
@@ -51,7 +57,8 @@ const SignIn = () => {
             id="userPassword"
             onChange = {(event) => onChangeHandler(event)}
           />
-          <button className="bg-green-400 hover:bg-green-500 w-full py-2 text-white" onClick = {(event) => {signInWithEmailAndPasswordHandler(event, email, password)}}>
+          <button className="bg-green-400 hover:bg-green-500 w-full py-2 text-white" 
+          onClick = {(event) => {signInWithEmailAndPasswordHandler(event, email, password)}}>
             Sign in
           </button>
         </form>
